@@ -1,0 +1,56 @@
+---
+title: "Google Analytics Traffic Report"
+author: "Michal Brys"
+output: html_document
+---
+
+```{r, echo=FALSE, warning=FALSE,error=FALSE, message=FALSE }
+ga_id <- 00000000
+date_start <- "2016-01-01"
+date_end <- "2016-06-30"
+
+#install.packages("googleAnalyticsR")
+#install.packages("ggplot2")
+library("googleAnalyticsR")
+library("ggplot2")
+
+#Run once from the console, then generate knitr document
+ga_auth()
+```
+
+### Sessions from `r date_start` to `r date_end`
+This chart contains scatter plot of sessions number in date range.
+
+```{r, echo=FALSE, warning=FALSE,error=FALSE, message=FALSE }
+gadata <- google_analytics(id = ga_id, 
+                           start= date_start, end= date_end, 
+                           metrics = c("sessions"),
+                           dimensions = c("date"),
+                           max = 5000)
+
+# scatter plot with trend line
+ggplot(data = gadata, aes(x = gadata$date,y = gadata$sessions) ) + 
+  geom_point() + 
+  geom_smooth() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+### Users engagement by device type
+This chart contains bar chart with avgSessionSuriation  divided by device type.
+
+```{r, echo=FALSE, warning=FALSE,error=FALSE, message=FALSE }
+gadata2 <- google_analytics(id = ga_id, 
+                           start= date_start, end= date_end,  
+                           metrics = c("sessions", "avgSessionDuration"),
+                           dimensions = c("date", "deviceCategory"),
+                           max = 5000)
+
+
+#plot sessions with deviceCategory
+ggplot(gadata2, aes(deviceCategory, sessions)) +   
+  geom_bar(aes(fill = deviceCategory), stat="identity")
+
+#plot avgSessionDuration with deviceCategory
+ggplot(gadata2, aes(deviceCategory, avgSessionDuration)) +   
+  geom_bar(aes(fill = deviceCategory), stat="identity")
+```
