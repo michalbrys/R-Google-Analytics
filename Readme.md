@@ -73,7 +73,11 @@ Compare behavior of different user segments (by deviceCategory).
 
 ![google analytics r clustering](./plots/7_bar_chart.png)
 
+### Sessions calendar
 
+Plot sessions calendar.
+  
+![google analytics r sessions calendar](./plots/9_calendar.png)
 
 ## Others resources
 
