@@ -14,12 +14,13 @@ library("googleAnalyticsR")
 library("ggplot2")
 library("forecast")
 library("reshape2")
+library("stats")
 
 # authorize connection with Google Analytics servers
 ga_auth()
 
 ## pick a profile with data to query
-#ga_id <- account_list[275,'viewId']
+ga_id <- account_list[275,'viewId']
 
 # or give it explicite using tool http://michalbrys.github.io/ga-tools/table-id.html in format 99999999
 ga_id <- 00000000
@@ -40,11 +41,10 @@ gadata$adjusted <- gadata$sessions - components$seasonal
 
 theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-
 forecastmodel <- HoltWinters(timeseries)
 plot(forecastmodel)
 
-forecast <- forecast.HoltWinters(forecastmodel, h=26) # 26 days in future
+forecast <- forecast:::forecast.HoltWinters(forecastmodel, h=26) # 26 days in future
 plot(forecast, xlim=c(0,13))
 
 forecastdf <- as.data.frame(forecast)
